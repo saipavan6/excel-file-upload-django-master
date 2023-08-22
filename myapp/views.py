@@ -2,47 +2,7 @@ from django.shortcuts import render
 import openpyxl
 from . import dal
 import os
-def rename_existing_file(file_path, new_name):
-    if os.path.exists(file_path):
-        file_name, file_extension = os.path.splitext(new_name)
-        i = 1
-        while os.path.exists(new_name):
-            new_name = f"{file_name}_{i}{file_extension}"
-            i += 1
-        os.rename(file_path, new_name)
-        return f"File renamed to {new_name}"
-    else:
-        return "File does not exist."
-def CheckPhotoExistorNot(request):
-    if "GET" == request.method:
-        return render(request, 'myapp/checkphotoexistornot.html', {})
-    else:
-        excel_file = request.FILES["excel_file"]
-        wb = openpyxl.load_workbook(excel_file)
-        worksheet = wb["7th"]
-        row_data2 = list()
-        for i, row in enumerate(worksheet.iter_rows()):
-            if i == 0:
-                continue
-            t = tuple()
-            for cell in row:
-                t = t + (cell.value,)
 
-            if int(row[4].value) == 1:
-                file_path = rf"C:\Users\saipa\Desktop\birla school photos\{str(row[3].value)}\Boys\_MG_{str(row[12].value)}.jpg"
-                new_name = rf"C:\Users\saipa\Desktop\birla school photos\{str(row[3].value)}\Boys\{str(row[0].value)}.jpg"
-            elif int(row[4].value) == 2:
-                file_path = rf"C:\Users\saipa\Desktop\birla school photos\{str(row[3].value)}\Girls\_MG_{str(row[12].value)}.jpg"
-                new_name = rf"C:\Users\saipa\Desktop\birla school photos\{str(row[3].value)}\Girls\{str(row[0].value)}.jpg"
-
-            #Call the function to rename the file if it exists
-            if row[12].value != None:
-                data = rename_existing_file(file_path, new_name)
-                t = t +  (data,)
-            row_data2.append(t)
-
-        print(row_data2)
-        return render(request, 'myapp/checkphotoexistornot.html', {"excel_data": row_data2})
 
 
 
@@ -52,7 +12,7 @@ def CheckExceldata(request):
     else:
         excel_file = request.FILES["excel_file"]
         wb = openpyxl.load_workbook(excel_file)
-        worksheet = wb["10th"]
+        worksheet = wb["GRADE X"]
         row_data2 = list()
         for i,row in enumerate(worksheet.iter_rows()):
             print(row)
@@ -83,7 +43,7 @@ def index(request):
         #print(sheets)
 
         # getting a particular sheet
-        worksheet = wb["10th"]
+        worksheet = wb["GRADE X"]
 
         # getting active sheet
         #active_sheet = wb.active
@@ -104,19 +64,21 @@ def index(request):
             t = tuple()
             for cell in row:
                 t = t + (cell.value,)
-            if row[2].value == None:
-                break
-            if int(row[4].value) == 1:
-                file_path = rf"C:\Users\saipa\Downloads\birla school photos\{str(row[3].value)}\Boys\_MG_{str(row[12].value)}.jpg"
-                new_name = rf"C:\Users\saipa\Downloads\birla school photos\{str(row[3].value)}\Boys\{str(row[0].value)}.jpg"
-            elif int(row[4].value) == 2:
-                file_path = rf"C:\Users\saipa\Downloads\birla school photos\{str(row[3].value)}\Girls\_MG_{str(row[12].value)}.jpg"
-                new_name = rf"C:\Users\saipa\Downloads\birla school photos\{str(row[3].value)}\Girls\{str(row[0].value)}.jpg"
 
-            #Call the function to rename the file if it exists
-            if row[12].value != None:
-                data = rename_existing_file(file_path, new_name)
-                t = t +  (data,)
+            #for changing file names
+            # if row[2].value == None:
+            #     break
+            # if int(row[4].value) == 1:
+            #     file_path = rf"C:\Users\saipa\Downloads\birla school photos\{str(row[3].value)}\Boys\_MG_{str(row[12].value)}.jpg"
+            #     new_name = rf"C:\Users\saipa\Downloads\birla school photos\{str(row[3].value)}\Boys\{str(row[0].value)}.jpg"
+            # elif int(row[4].value) == 2:
+            #     file_path = rf"C:\Users\saipa\Downloads\birla school photos\{str(row[3].value)}\Girls\_MG_{str(row[12].value)}.jpg"
+            #     new_name = rf"C:\Users\saipa\Downloads\birla school photos\{str(row[3].value)}\Girls\{str(row[0].value)}.jpg"
+            #
+            # #Call the function to rename the file if it exists
+            # if row[12].value != None:
+            #     data = rename_existing_file(file_path, new_name)
+            #     t = t +  (data,)
 
             row_data2.append(t)
         data = dal.dbStudentList(row_data2)
@@ -218,7 +180,47 @@ def index(request):
         # return render(request, 'myapp/index.html', {"excel_data":row_data2})
 
 
+def rename_existing_file(file_path, new_name):
+    if os.path.exists(file_path):
+        file_name, file_extension = os.path.splitext(new_name)
+        i = 1
+        while os.path.exists(new_name):
+            new_name = f"{file_name}_{i}{file_extension}"
+            i += 1
+        os.rename(file_path, new_name)
+        return f"File renamed to {new_name}"
+    else:
+        return "File does not exist."
+def CheckPhotoExistorNot(request):
+    if "GET" == request.method:
+        return render(request, 'myapp/checkphotoexistornot.html', {})
+    else:
+        excel_file = request.FILES["excel_file"]
+        wb = openpyxl.load_workbook(excel_file)
+        worksheet = wb["7th"]
+        row_data2 = list()
+        for i, row in enumerate(worksheet.iter_rows()):
+            if i == 0:
+                continue
+            t = tuple()
+            for cell in row:
+                t = t + (cell.value,)
 
+            if int(row[4].value) == 1:
+                file_path = rf"C:\Users\saipa\Desktop\birla school photos\{str(row[3].value)}\Boys\_MG_{str(row[12].value)}.jpg"
+                new_name = rf"C:\Users\saipa\Desktop\birla school photos\{str(row[3].value)}\Boys\{str(row[0].value)}.jpg"
+            elif int(row[4].value) == 2:
+                file_path = rf"C:\Users\saipa\Desktop\birla school photos\{str(row[3].value)}\Girls\_MG_{str(row[12].value)}.jpg"
+                new_name = rf"C:\Users\saipa\Desktop\birla school photos\{str(row[3].value)}\Girls\{str(row[0].value)}.jpg"
+
+            #Call the function to rename the file if it exists
+            if row[12].value != None:
+                data = rename_existing_file(file_path, new_name)
+                t = t +  (data,)
+            row_data2.append(t)
+
+        print(row_data2)
+        return render(request, 'myapp/checkphotoexistornot.html', {"excel_data": row_data2})
 
 
 

@@ -55,7 +55,7 @@ def dbStudentList(row_data2):
             return row_data2
 
         SQLCommand = f"""DECLARE @Regid int,@SuperId int,@BranchId int,@Academicid int,@Sectionsid int,@Standardsid int,@StudentTransactionsid int,@GuardianDetailsid int
-                SET @SuperId = 20019
+                SET @SuperId = 20020
                 select @BranchId = id from [CONFIG].[Branches] where SuperId = @SuperId and Orgtype =1
                 select @Academicid = id from [CONFIG].[AcademicYears] where SuperId = @SuperId and CurrentActive = 1 and IsActive = 1
                 select @Sectionsid = id from [CONFIG].[Sections] where SuperId = @SuperId and BranchId = @BranchId AND name = '{i[11]}'
